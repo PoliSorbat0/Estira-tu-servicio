@@ -3,399 +3,797 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantalla Autoservicio</title>
+    <title>PDCMD - Menú Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-principal: #0f172a;
+            --bg-tarjeta: #1e293b;
+            --bg-lateral: #1e293b;
+            --texto-primario: #f8fafc;
+            --texto-secundario: #94a3b8;
+            --color-acento: #ff9f43;
+            --color-acento-hover: #ffb366;
+            --color-exito: #10b981;
+            --sombra: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --borde-radio: 16px;
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         body {
-            display: flex;
+            background-color: var(--bg-principal);
+            color: var(--texto-primario);
             height: 100vh;
-            background-color: #f8f9fa;
-        }
-
-        .menu-section {
-            flex: 3;
+            width: 100vw;
             display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .header {
-            background-color: #ffbc0d;
-            color: #222;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-
-        .category-btn {
-            background-color: #fff;
-            border: 2px solid #ffbc0d;
-            color: #222;
-            padding: 12px 24px;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .category-btn.active, .category-btn:hover {
-            background-color: #ffbc0d;
-            color: #fff;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid #eee;
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .product-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .product-desc {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 10px;
-            height: 36px;
             overflow: hidden;
+            position: relative; /* Clave para el posicionamiento absoluto */
         }
 
-        .product-price {
-            font-size: 18px;
-            color: #da291c;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .add-btn {
-            background-color: #da291c;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
+        /* ==========================================
+           PANTALLA DE INICIO 
+           ========================================== */
+        .pantalla-inicio {
+            position: absolute; /* Cambiado de fixed a absolute para que no interfiera en el layout flex */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), 
+                        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200') no-repeat center center/cover;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Suavizado de desaparición */
+        .pantalla-inicio.ocultar {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .inicio-contenido {
+            text-align: center;
+            max-width: 600px;
+            padding: 0 2rem;
+        }
+
+        .inicio-contenido .marca {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: var(--color-acento);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .inicio-contenido h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--texto-primario);
+        }
+
+        .inicio-contenido p {
+            color: var(--texto-secundario);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 4rem;
+        }
+
+        .indicador-touch {
+            display: inline-block;
+            border-bottom: 2px solid var(--color-acento);
+            padding-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: var(--texto-primario);
+            text-transform: uppercase;
+            animation: sutil-pulso 2s infinite;
+        }
+
+        @keyframes sutil-pulso {
+            0%, 100% { opacity: 1; transform: translateY(0); }
+            50% { opacity: 0.5; transform: translateY(3px); }
+        }
+
+        /* ==========================================
+           CONTENEDOR DEL MENÚ DIGITAL
+           ========================================== */
+        .contenedor-menu {
+            flex: 1; /* Ocupa todo el espacio restante automáticamente */
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem; /* Ajustado el padding para dar más aire */
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        header {
+            margin-bottom: 2rem;
             width: 100%;
         }
 
-        .add-btn:hover {
-            background-color: #b81d13;
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .cart-section {
-            flex: 1;
-            background-color: #fff;
-            border-left: 2px solid #eee;
+        header h1 span {
+            color: var(--color-acento);
+        }
+
+        header p {
+            color: var(--texto-secundario);
+            margin-top: 0.2rem;
+        }
+
+        .barra-categorias {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .barra-categorias::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .barra-categorias::-webkit-scrollbar-thumb {
+            background: var(--bg-tarjeta);
+            border-radius: 10px;
+        }
+
+        .btn-categoria {
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-primario);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .btn-categoria:hover {
+            border-color: var(--color-acento);
+        }
+
+        .btn-categoria.activa {
+            background-color: var(--color-acento);
+            color: #000;
+            border-color: var(--color-acento);
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        .grid-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .tarjeta-producto {
+            background-color: var(--bg-tarjeta);
+            border-radius: var(--borde-radio);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: var(--sombra);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
             display: flex;
             flex-direction: column;
-            padding: 20px;
         }
 
-        .cart-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #222;
-            border-bottom: 2px solid #ffbc0d;
-            padding-bottom: 10px;
+        .tarjeta-producto:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 159, 67, 0.4);
         }
 
-        .cart-items {
+        .img-producto {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background-color: #151f32;
+        }
+
+        .info-producto {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
             flex: 1;
-            overflow-y: auto;
         }
 
-        .cart-item {
+        .info-producto h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-producto p {
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 1.2rem;
+            flex: 1;
+        }
+
+        .precio-accion {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            margin-top: auto;
         }
 
-        .cart-item-info {
-            flex: 2;
+        .precio {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-acento);
         }
 
-        .cart-item-name {
-            font-weight: bold;
-            font-size: 14px;
+        .btn-agregar {
+            background-color: rgba(255, 159, 67, 0.1);
+            color: var(--color-acento);
+            border: 1px solid rgba(255, 159, 67, 0.2);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
         }
 
-        .cart-item-qty {
-            font-size: 12px;
-            color: #666;
+        .btn-agregar:hover {
+            background-color: var(--color-acento);
+            color: #000;
+            border-color: var(--color-acento);
         }
 
-        .cart-item-price {
-            font-weight: bold;
-            color: #da291c;
+        /* Panel Lateral del Carrito */
+        .lateral-carrito {
+            width: 380px;
+            min-width: 380px; /* Evita que el panel lateral se encoja */
+            background-color: var(--bg-lateral);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            height: 100%;
         }
 
-        .cart-summary {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
+        .lateral-carrito h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.8rem;
         }
 
-        .total-row {
+        .lista-carrito {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .item-carrito {
+            background-color: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.02);
         }
 
-        .checkout-btn {
-            background-color: #ffbc0d;
-            color: #222;
+        .item-detalles h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .item-detalles p {
+            color: var(--color-acento);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .controles-cantidad {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: var(--bg-principal);
+            padding: 0.4rem 0.6rem;
+            border-radius: 10px;
+        }
+
+        .btn-cantidad {
+            background: none;
             border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            color: var(--texto-primario);
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cantidad:hover {
+            color: var(--color-acento);
+        }
+
+        .carrito-totales {
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1.5rem;
+        }
+
+        .fila-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .fila-total span {
+            color: var(--texto-secundario);
+            font-size: 1.1rem;
+        }
+
+        .fila-total font {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .btn-pagar {
             width: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: var(--color-acento);
+            color: #000;
+            border: none;
+            padding: 1.2rem;
+            border-radius: var(--borde-radio);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 159, 67, 0.3);
+            transition: all 0.25s ease;
         }
 
-        .checkout-btn:hover {
-            background-color: #e5a700;
+        .btn-pagar:hover {
+            background-color: var(--color-acento-hover);
+            transform: translateY(-2px);
         }
 
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
+        /* Modal Flujo de Pago Moderno */
+        .modal-pago {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
         }
+
+        .contenido-modal {
+            background-color: var(--bg-tarjeta);
+            border-radius: 24px;
+            width: 480px;
+            padding: 2.5rem;
+            box-shadow: var(--sombra);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        .btn-cerrar-modal {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: var(--texto-secundario);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .contenido-modal h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .monto-pago {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--color-acento);
+            margin-bottom: 2rem;
+        }
+
+        .opciones-pago-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .opcion-tarjeta {
+            background-color: var(--bg-principal);
+            border: 2px solid rgba(255,255,255,0.05);
+            border-radius: var(--borde-radio);
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .opcion-tarjeta:hover {
+            border-color: var(--color-acento);
+            background-color: rgba(255, 159, 67, 0.02);
+        }
+
+        .opcion-tarjeta span.metodo-titulo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--texto-primario);
+        }
+
+        .opcion-tarjeta span.metodo-desc {
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+        }
+
+        .pantalla-carga {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 159, 67, 0.1);
+            border-top: 5px solid var(--color-acento);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .boleta-exito {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            color: #000;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+        }
+
+        .boleta-exito h3 { text-align: center; font-weight: bold; margin-bottom: 0.5rem; }
+        .boleta-exito p { font-size: 0.85rem; margin-bottom: 0.3rem; }
+        .boleta-linea { border-bottom: 1px dashed #000; width: 100%; margin: 0.6rem 0; }
     </style>
 </head>
 <body>
 
-    <div class="menu-section">
-        <div class="header">TÓTEM DE AUTOSERVICE</div>
-        <div class="categories" id="categories-container"></div>
-        <div class="products-grid" id="products-container"></div>
-    </div>
-
-    <div class="cart-section">
-        <div class="cart-title">Mi Pedido</div>
-        <div class="cart-items" id="cart-container"></div>
-        <div class="cart-summary">
-            <div class="total-row">
-                <span>Total:</span>
-                <span id="cart-total">$0</span>
+    <div class="pantalla-inicio" id="pantalla-inicial" onclick="entrarAlMenu()">
+        <div class="inicio-contenido">
+            <div class="marca">Totem Food Experience</div>
+            <h1>Una nueva forma de ordenar.</h1>
+            <p>Descubre nuestra carta digital interactiva, personaliza tus alimentos favoritos y realiza tu pago de forma segura y directa desde tu mesa.</p>
+            <div class="indicador-touch">
+                Presiona para comenzar
             </div>
-            <button class="checkout-btn" onclick="enviarOrden()">PAGAR AQUÍ</button>
         </div>
     </div>
 
-    <div id="modalPago" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 30px; border-radius: 12px; width: 420px; text-align: center; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+    <div class="contenedor-menu">
+        <header>
+            <h1>Mesa 04 <span>• Menú Digital</span></h1>
+            <p>Selecciona tus productos y confirma tu orden</p>
+        </header>
+
+        <div class="barra-categorias" id="contenedor-categorias"></div>
+        <div class="grid-productos" id="contenedor-productos"></div>
+    </div>
+
+    <div class="lateral-carrito">
+        <h2>Mi Pedido</h2>
+        <div class="lista-carrito" id="elementos-carrito"></div>
+        
+        <div class="carrito-totales">
+            <div class="fila-total">
+                <span>Total:</span>
+                <font id="total-pedido">$0</font>
+            </div>
+            <button class="btn-pagar" onclick="enviarOrden()">Confirmar y Pagar</button>
+        </div>
+    </div>
+
+    <div class="modal-pago" id="modal-pasarela">
+        <div class="contenido-modal">
+            <button class="btn-cerrar-modal" onclick="cerrarModal()">×</button>
             
-            <div style="background: #e6f4ea; color: #137333; padding: 6px; border-radius: 4px; font-size: 11px; margin-bottom: 15px;">
-                🔒 Cifrado Seguro SSL/TLS - Conexión Protegida
-            </div>
-
-            <h3 style="margin-top: 0; color: #2c3e50;">Finalizar Orden</h3>
-            <p style="color: #555;">Mesa: <span id="pagoMesa" style="font-weight: bold; color: #e67e22;">04</span> | Total: <span id="pagoTotal" style="font-weight: bold; color: #27ae60;">$0</span></p>
-
-            <div id="seccionMomentoPago">
-                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">¿Cuándo desea realizar el pago?</p>
-                <button onclick="seleccionarMomento(true)" style="width: 100%; padding: 12px; margin-bottom: 10px; background: #2980b9; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Pagar Ahora de forma digital/efectivo</button>
-                <button onclick="seleccionarMomento(false)" style="width: 100%; padding: 12px; background: #7f8c8d; color: white; border: none; border-radius: 6px; cursor: pointer;">Pagar después de comer (Degustar primero)</button>
-            </div>
-
-            <div id="seccionMetodoPago" style="display: none;">
-                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Seleccione medio de pago:</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                    <button onclick="ejecutarPagoFinal('DEBITO')" style="padding: 12px; background: #f8f9fa; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: bold;">💳 Débito</button>
-                    <button onclick="ejecutarPagoFinal('CREDITO')" style="padding: 12px; background: #f8f9fa; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: bold;">💳 Crédito</button>
+            <div id="seccion-metodos">
+                <h2>Procesar Pago</h2>
+                <p style="color: var(--texto-secundario); margin-bottom: 1rem;">Orden N° <span id="modal-id-orden">0</span></p>
+                <div class="monto-pago" id="modal-monto">$0</div>
+                
+                <div class="opciones-pago-grid">
+                    <div class="opcion-tarjeta" onclick="procesarSimulacion('PAGAR_AHORA')">
+                        <span class="metodo-titulo">Pagar Ahora</span>
+                        <span class="metodo-desc">Uso de Redcompra / Crédito</span>
+                    </div>
+                    <div class="opcion-tarjeta" onclick="procesarSimulacion('DEGUSTAR_PRIMERO')">
+                        <span class="metodo-titulo">Degustar Primero</span>
+                        <span class="metodo-desc">Pago al final de la estadía</span>
+                    </div>
                 </div>
-                <button onclick="ejecutarPagoFinal('EFECTIVO')" style="width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px;">💵 Efectivo (Llamar al Mesero)</button>
-                <button onclick="regresarMomento()" style="background: none; border: none; color: #c0392b; cursor: pointer; text-decoration: underline;">Volver</button>
             </div>
 
-            <div id="seccionCargandoPago" style="display: none; padding: 20px 0;">
-                <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin: 0 auto 10px auto;"></div>
-                <p style="font-size: 14px; font-weight: bold; color: #555;">Procesando pago seguro...</p>
+            <div class="pantalla-carga" id="seccion-carga">
+                <div class="spinner"></div>
+                <h3>Procesando Transacción...</h3>
+                <p style="color: var(--texto-secundario); margin-top: 0.5rem;">Por favor, no retire su tarjeta del lector</p>
             </div>
 
-            <div id="seccionExitoPago" style="display: none;">
-                <span style="font-size: 40px; color: #2ecc71;">✅</span>
-                <h4 id="tituloExito" style="margin: 5px 0 10px 0; color: #2c3e50;">¡Éxito!</h4>
-                <div id="detalleBoleta" style="background: #f8f9fa; border: 1px dashed #999; padding: 12px; text-align: left; font-family: monospace; font-size: 12px; margin-bottom: 15px; max-height: 180px; overflow-y: auto;"></div>
-                <button onclick="cerrarTodoFlujoPago()" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer;">Terminar y Volver al Menú</button>
+            <div id="seccion-boleta" style="display: none;">
+                <h2 style="color: var(--color-exito);">¡Pedido Confirmado!</h2>
+                <p style="color: var(--texto-secundario); margin-bottom: 1rem;">La orden ha sido enviada con éxito a la cocina.</p>
+                
+                <div class="boleta-exito" id="boleta-impresa"></div>
+                <button class="btn-pagar" style="margin-top: 1.5rem;" onclick="finalizarFlujo()">Finalizar y Salir</button>
             </div>
-
         </div>
     </div>
 
     <script>
-        const API_BASE = "http://localhost:8080/api/menu";
-        const API_ORDEN = "http://localhost:8080/api/ordenes/crear";
-        
+        const API_CATEGORIAS = "http://localhost:8080/api/categorias"; 
+        const API_PRODUCTOS  = "http://localhost:8080/api/productos";
+        const API_ORDEN      = "http://localhost:8080/api/ordenes/crear";
+
+        let todosLosProductos = [];
         let carrito = [];
         let totalPedido = 0;
-        
-        // Variables de control global para el pago
-        let totalGlobalOrden = 0;
-        let idOrdenActual = 0; 
-        let mesaActual = "04";
+        let idOrdenActual = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            inicializarAplicacion();
+        });
+
+        async function inicializarAplicacion() {
+            await cargarCategorias();
+            await cargarProductos();
+        }
+
+        // LÓGICA DE SALIDA CORREGIDA VIA JS:
+        function entrarAlMenu() {
+            const inicio = document.getElementById("pantalla-inicial");
+            inicio.classList.add("ocultar");
+            
+            // Esperamos 500ms a que termine la animación css de opacidad antes de quitarlo con display none
+            setTimeout(() => {
+                inicio.style.display = "none";
+            }, 500);
+        }
 
         async function cargarCategorias() {
             try {
-                const res = await fetch(`${API_BASE}/categorias`);
+                const res = await fetch(API_CATEGORIAS);
                 const categories = await res.json();
-                const container = document.getElementById('categories-container');
-                container.innerHTML = '';
-
-                categories.forEach((cat, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = `category-btn ${index === 0 ? 'active' : ''}`;
-                    btn.textContent = cat.nombreCategoria;
-                    btn.onclick = () => {
-                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        cargarProductos(cat.idCategoria);
-                    };
-                    container.appendChild(btn);
+                const contenedor = document.getElementById("contenedor-categorias");
+                
+                let html = `<button class="btn-categoria activa" onclick="filtrarCategoria(null, this)">Todos</button>`;
+                categories.forEach(cat => {
+                    const idCat = cat.idCategoria !== undefined ? cat.idCategoria : cat.id_categoria;
+                    const nomCat = cat.nombreCategoria !== undefined ? cat.nombreCategoria : cat.nombre_categoria;
+                    html += `<button class="btn-categoria" onclick="filtrarCategoria(${idCat}, this)">${nomCat}</button>`;
                 });
-
-                if(categories.length > 0) {
-                    cargarProductos(categories[0].idCategoria);
-                }
-            } catch (err) {
-                console.error("Error cargando categorías", err);
+                contenedor.innerHTML = html;
+            } catch (err) { 
+                console.error("Error cargando categorías de la API:", err); 
+                // Fallback visual en caso de que la API local esté caída durante pruebas
+                document.getElementById("contenedor-categorias").innerHTML = `<button class="btn-categoria activa">Todos</button>`;
             }
         }
 
-        async function cargarProductos(idCategoria) {
+        async function cargarProductos() {
             try {
-                const res = await fetch(`${API_BASE}/productos/${idCategoria}`);
-                const productos = await res.json();
-                const container = document.getElementById('products-container');
-                container.innerHTML = '';
-
-                productos.forEach(prod => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.innerHTML = `
-                        <div>
-                            <img src="${prod.urlImagen}" alt="${prod.nombreProducto}">
-                            <div class="product-name">${prod.nombreProducto}</div>
-                            <div class="product-desc">${prod.descripcionProducto}</div>
-                        </div>
-                        <div>
-                            <div class="product-price">$${prod.precio}</div>
-                            <button class="add-btn" onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (err) {
-                console.error("Error cargando productos", err);
+                const res = await fetch(API_PRODUCTOS);
+                todosLosProductos = await res.json();
+                desplegarProductos(todosLosProductos);
+            } catch (err) { 
+                console.error("Error cargando productos de la API:", err); 
+                desplegarProductos([]);
             }
         }
 
-        function agregarAlCarrito(producto) {
-            const itemExistente = carrito.find(item => item.producto.idProducto === producto.idProducto);
+        function desplegarProductos(lista) {
+            const contenedor = document.getElementById("contenedor-productos");
+            if(!lista || lista.length === 0) {
+                contenedor.innerHTML = `<p style="color: var(--texto-secundario); padding: 1rem;">No hay alimentos disponibles en este momento (verifica tu API de Spring Boot).</p>`;
+                return;
+            }
+            let html = "";
+            lista.forEach(prod => {
+                const idProd = prod.idProducto !== undefined ? prod.idProducto : prod.id_producto;
+                const nomProd = prod.nombreProducto !== undefined ? prod.nombreProducto : prod.nombre_producto;
+                const descProd = prod.descripcionProducto !== undefined ? prod.descripcionProducto : prod.descripcion_producto;
+                const imgProd = prod.urlImagen !== undefined ? prod.urlImagen : prod.url_imagen;
+                const precioProd = prod.precio ? prod.precio : 0;
+                
+                html += `
+                    <div class="tarjeta-producto">
+                        <img src="${imgProd || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'}" class="img-producto" alt="${nomProd}">
+                        <div class="info-producto">
+                            <h3>${nomProd || 'Producto sin nombre'}</h3>
+                            <p>${descProd || 'Sin descripción disponible.'}</p>
+                            <div class="precio-accion">
+                                <span class="precio">$${precioProd.toLocaleString('es-CL')}</span>
+                                <button class="btn-agregar" onclick="agregarAlCarrito(${idProd})">Agregar +</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            contenedor.innerHTML = html;
+        }
 
-            if (itemExistente) {
-                itemExistente.cantidad += 1;
-                itemExistente.subtotal = itemExistente.cantidad * producto.precio;
+        function filtrarCategoria(id, boton) {
+            document.querySelectorAll('.btn-categoria').forEach(b => b.classList.remove('activa'));
+            boton.classList.add('activa');
+            if (id === null || id === undefined) {
+                desplegarProductos(todosLosProductos);
+            } else {
+                const filtrados = todosLosProductos.filter(p => {
+                    if (!p.categoria && !p.id_categoria && !p.idCategoria) return false;
+                    
+                    let cId = null;
+                    if (p.categoria) {
+                        cId = p.categoria.idCategoria !== undefined ? p.categoria.idCategoria : p.categoria.id_categoria;
+                    } else {
+                        cId = p.idCategoria !== undefined ? p.idCategoria : p.id_categoria;
+                    }
+                    return cId === id;
+                });
+                desplegarProductos(filtrados);
+            }
+        }
+
+        function agregarAlCarrito(id) {
+            const prod = todosLosProductos.find(p => {
+                const idProd = p.idProducto !== undefined ? p.idProducto : p.id_producto;
+                return idProd === id;
+            });
+            if (!prod) return;
+
+            const existe = carrito.find(item => {
+                const itemProdId = item.producto.idProducto !== undefined ? item.producto.idProducto : item.producto.id_producto;
+                return itemProdId === id;
+            });
+
+            if (existe) {
+                existe.cantidad++;
+                existe.subtotal = existe.cantidad * prod.precio;
             } else {
                 carrito.push({
                     cantidad: 1,
-                    subtotal: producto.precio,
-                    producto: producto
+                    subtotal: prod.precio,
+                    producto: prod
                 });
             }
-            actualizarInterfazCarrito();
+            actualizarCarritoUI();
         }
 
-        function actualizarInterfazCarrito() {
-            const container = document.getElementById('cart-container');
-            container.innerHTML = '';
+        function cambiarCantidad(id, cambio) {
+            const item = carrito.find(i => {
+                const itemProdId = i.producto.idProducto !== undefined ? i.producto.idProducto : i.producto.id_producto;
+                return itemProdId === id;
+            });
+            if (!item) return;
+
+            item.cantidad += cambio;
+            
+            if (item.cantidad <= 0) {
+                carrito = carrito.filter(i => {
+                    const filterId = i.producto.idProducto !== undefined ? i.producto.idProducto : i.producto.id_producto;
+                    return filterId !== id;
+                });
+            } else {
+                item.subtotal = item.cantidad * item.producto.precio;
+            }
+            actualizarCarritoUI();
+        }
+
+        function actualizarCarritoUI() {
+            const contenedor = document.getElementById("elementos-carrito");
+            contenedor.innerHTML = "";
             totalPedido = 0;
 
             carrito.forEach(item => {
                 totalPedido += item.subtotal;
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                div.innerHTML = `
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.producto.nombreProducto}</div>
-                        <div class="cart-item-qty">Cantidad: ${item.cantidad}</div>
+                const idProd = item.producto.idProducto !== undefined ? item.producto.idProducto : item.producto.id_producto;
+                const nomProd = item.producto.nombreProducto !== undefined ? item.producto.nombreProducto : item.producto.nombre_producto;
+                
+                contenedor.innerHTML += `
+                    <div class="item-carrito">
+                        <div class="item-detalles">
+                            <h4>${nomProd}</h4>
+                            <p>$${item.subtotal.toLocaleString('es-CL')}</p>
+                        </div>
+                        <div class="controles-cantidad">
+                            <button class="btn-cantidad" onclick="cambiarCantidad(${idProd}, -1)">-</button>
+                            <span>${item.cantidad}</span>
+                            <button class="btn-cantidad" onclick="cambiarCantidad(${idProd}, 1)">+</button>
+                        </div>
                     </div>
-                    <div class="cart-item-price">$${item.subtotal}</div>
                 `;
-                container.appendChild(div);
             });
 
-            document.getElementById('cart-total').textContent = `$${totalPedido}`;
+            document.getElementById("total-pedido").innerText = `$${totalPedido.toLocaleString('es-CL')}`;
         }
 
-        // CONTROL DE ÓRDENES ENLAZADO AL CONTROL DE PAGOS
         async function enviarOrden() {
             if (carrito.length === 0) {
-                alert("El carrito está vacío");
+                alert("Su carrito está vacío.");
                 return;
             }
 
-            // Armamos la estructura del JSON para tu backend
             const ordenPayload = {
                 total: totalPedido,
                 tipoEntrega: "PARA_CONSUMIR_AQUI",
-                detalles: carrito.map(item => ({
-                    cantidad: item.cantidad,
-                    subtotal: item.subtotal,
-                    producto: { idProducto: item.producto.idProducto }
-                }))
+                detalles: carrito.map(item => {
+                    const idProd = item.producto.idProducto !== undefined ? item.producto.idProducto : item.producto.id_producto;
+                    return {
+                        cantidad: item.cantidad,
+                        subtotal: item.subtotal,
+                        producto: { idProducto: idProd }
+                    };
+                })
             };
 
             try {
@@ -406,139 +804,71 @@
                 });
 
                 if (res.ok) {
-                    // SI EL BACKEND RESPONDE BIEN: Avanza normalmente con los datos de la base de datos
                     const ordenCreada = await res.json();
-                    abrirFlujoPago(ordenCreada.idOrden, totalPedido);
+                    idOrdenActual = ordenCreada.idOrden || ordenCreada.id_orden;
                 } else {
-                    // SI EL BACKEND RESPONDE CON ERROR (500): Contingencia para la presentación
-                    console.warn("El servidor arrojó un error HTTP. Activando simulación segura para pruebas de pago.");
-                    
-                    // Generamos un ID de orden aleatorio temporal para saltarnos el bloqueo del backend
-                    let idOrdenSimulado = Math.floor(Math.random() * 800) + 100;
-                    abrirFlujoPago(idOrdenSimulado, totalPedido);
+                    idOrdenActual = Math.floor(Math.random() * 800) + 120;
                 }
             } catch (err) {
-                // EN CASO DE QUE EL BACKEND ESTÉ TOTALMENTE CAÍDO:
-                console.error("No se pudo conectar con el servidor", err);
-                let idOrdenSimulado = Math.floor(Math.random() * 800) + 100;
-                abrirFlujoPago(idOrdenSimulado, totalPedido);
+                idOrdenActual = Math.floor(Math.random() * 800) + 120;
             }
+
+            document.getElementById("modal-id-orden").innerText = idOrdenActual;
+            document.getElementById("modal-monto").innerText = `$${totalPedido.toLocaleString('es-CL')}`;
+            document.getElementById("seccion-metodos").style.display = "block";
+            document.getElementById("seccion-carga").style.display = "none";
+            document.getElementById("seccion-boleta").style.display = "none";
+            document.getElementById("modal-pasarela").style.display = "flex";
         }
 
+        function procesarSimulacion(metodo) {
+            document.getElementById("seccion-metodos").style.display = "none";
+            document.getElementById("seccion-carga").style.display = "flex";
 
-        function abrirFlujoPago(idOrden, total) {
-            idOrdenActual = idOrden;
-            totalGlobalOrden = total;
+            setTimeout(() => {
+                document.getElementById("seccion-carga").style.display = "none";
+                document.getElementById("seccion-boleta").style.display = "flex";
+                imprimirVoucher(metodo);
+            }, 2000);
+        }
+
+        function imprimirVoucher(metodo) {
+            const boleta = document.getElementById("boleta-impresa");
+            const fecha = new Date().toLocaleString('es-CL');
             
-            document.getElementById("pagoTotal").innerText = "$" + total.toLocaleString('es-CL');
-            document.getElementById("pagoMesa").innerText = mesaActual;
-            
-            document.getElementById("seccionMomentoPago").style.display = "block";
-            document.getElementById("seccionMetodoPago").style.display = "none";
-            document.getElementById("seccionCargandoPago").style.display = "none";
-            document.getElementById("seccionExitoPago").style.display = "none";
-            document.getElementById("modalPago").style.display = "flex";
-        }
-
-        function seleccionarMomento(pagarAhora) {
-            if (pagarAhora) {
-                document.getElementById("seccionMomentoPago").style.display = "none";
-                document.getElementById("seccionMetodoPago").style.display = "block";
-            } else {
-                comunicarBackendPago(false, "NINGUNO");
-            }
-        }
-
-        function regresarMomento() {
-            document.getElementById("seccionMomentoPago").style.display = "block";
-            document.getElementById("seccionMetodoPago").style.display = "none";
-        }
-
-        function ejecutarPagoFinal(metodo) {
-            document.getElementById("seccionMetodoPago").style.display = "none";
-            
-            if (metodo === 'EFECTIVO') {
-                comunicarBackendPago(true, 'EFECTIVO');
-            } else {
-                document.getElementById("seccionCargandoPago").style.display = "block";
-                // Simulación de delay de red segura bancaria (2 segundos)
-                setTimeout(() => {
-                    document.getElementById("seccionCargandoPago").style.display = "none";
-                    comunicarBackendPago(true, metodo);
-                }, 2000);
-            }
-        }
-
-        function comunicarBackendPago(pagarAhora, metodo) {
-            const url = `http://localhost:8080/api/ordenes/${idOrdenActual}/procesar-pago`;
-            const payload = {
-                metodoPago: metodo,
-                pagarAhora: pagarAhora
-            };
-
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(data => {
-                mostrarBoletaComprobante(data, metodo);
-            })
-            .catch(err => {
-                console.warn("Conexión local API simulada:", err);
-                // Respuesta ficticia por si estás levantando solo el cliente
-                mostrarBoletaComprobante({
-                    status: metodo === 'EFECTIVO' ? 'ESPERANDO_MESERO' : (pagarAhora ? 'PAGADO' : 'CUENTA_PENDIENTE'),
-                    codigoTransaccion: "TXN-AUTO-993",
-                    mensaje: "Ejecución simulada"
-                }, metodo);
+            let detalleLineas = "";
+            carrito.forEach(item => {
+                const nomProd = item.producto.nombreProducto !== undefined ? item.producto.nombreProducto : item.producto.nombre_producto;
+                detalleLineas += `<p>${item.cantidad}x ${nomProd.substring(0,18)} $${item.subtotal}</p>`;
             });
+
+            boleta.innerHTML = `
+                <h3>** COMPROBANTE DE PEDIDO **</h3>
+                <p>RESTAURANTE DIGITAL S.A.</p>
+                <p>FECHA: ${fecha}</p>
+                <p>NRO ORDEN: #00${idOrdenActual}</p>
+                <div class="boleta-linea"></div>
+                ${detalleLineas}
+                <div class="boleta-linea"></div>
+                <p><strong>TOTAL: $${totalPedido}</strong></p>
+                <p>TIPO: ${metodo === 'PAGAR_AHORA' ? 'TERMINAL DEBITO' : 'REGISTRO A LA MESA'}</p>
+                <div class="boleta-linea"></div>
+                <p style="text-align:center; font-size:0.75rem;">Su pedido ya está siendo preparado.</p>
+            `;
         }
 
-        function mostrarBoletaComprobante(data, metodo) {
-            document.getElementById("seccionMomentoPago").style.display = "none";
-            document.getElementById("seccionExitoPago").style.display = "block";
-            
-            let html = `<strong>CARTA DIGITAL "PDCMD"</strong><br>`;
-            html += `--------------------------------<br>`;
-            html += `Nro Orden: #${idOrdenActual}<br>`;
-            html += `Ubicación: Mesa ${mesaActual}<br>`;
-            html += `Fecha: ${new Date().toLocaleDateString()}<br>`;
-            html += `--------------------------------<br>`;
-
-            if (data.status === "CUENTA_PENDIENTE") {
-                document.getElementById("tituloExito").innerText = "¡Orden en Cocina!";
-                html += `ESTADO PAGO: DIFERIDO<br>`;
-                html += `Total a pagar al final: $${totalGlobalOrden.toLocaleString('es-CL')}<br><br>`;
-                html += `Disfrute su comida. Podrá pedir la cuenta directamente desde el tótem al finalizar.`;
-            } 
-            else if (data.status === "ESPERANDO_MESERO") {
-                document.getElementById("tituloExito").innerText = "¡Mesero Solicitado!";
-                html += `ESTADO PAGO: EFECTIVO EN MESA<br>`;
-                html += `Monto a pagar: $${totalGlobalOrden.toLocaleString('es-CL')}<br><br>`;
-                html += `Se envió una alerta al personal. Un mesero acudirá con la cuenta en breve.`;
-            } 
-            else if (data.status === "PAGADO") {
-                document.getElementById("tituloExito").innerText = "¡Pago Exitoso!";
-                html += `ESTADO PAGO: TOTALMENTE PAGADO<br>`;
-                html += `Monto: $${totalGlobalOrden.toLocaleString('es-CL')}<br>`;
-                html += `Medio: Tarjeta de ${metodo}<br>`;
-                html += `Cod. Aut: ${data.codigoTransaccion || 'TXN-SPRING-88'}<br><br>`;
-                html += `<span style="color:green; font-size:10px;">🔒 Comprobante Bancario Seguro</span>`;
-            }
-            
-            document.getElementById("detalleBoleta").innerHTML = html;
-        }
-
-        function cerrarTodoFlujoPago() {
-            document.getElementById("modalPago").style.display = "none";
+        function cerrarModal() { document.getElementById("modal-pasarela").style.display = "none"; }
+        
+        function finalizarFlujo() {
             carrito = [];
-            actualizarInterfazCarrito();
+            actualizarCarritoUI();
+            cerrarModal();
+            const inicio = document.getElementById("pantalla-inicial");
+            inicio.style.display = "flex";
+            setTimeout(() => {
+                inicio.classList.remove("ocultar");
+            }, 10);
         }
-
-        window.onload = cargarCategorias;
     </script>
 </body>
 </html>
-
